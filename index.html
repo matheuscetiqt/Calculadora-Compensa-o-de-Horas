@@ -13,6 +13,7 @@
     --text: #0f172a;
     --muted: #64748b;
     --border: #e2e8f0;
+    --success: #22c55e;
 }
 
 * { box-sizing: border-box; }
@@ -143,6 +144,41 @@ button {
     border-color: #34d399;
     color: #065f46;
 }
+
+/* 🔹 PROGRESSO */
+.progress-container {
+    margin-top: 14px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--success), #16a34a);
+    transition: width 0.4s ease;
+}
+
+.progress-text {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+}
+
+/* 🔹 FOOTER */
+.footer {
+    margin-top: 18px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+}
 </style>
 </head>
 <body>
@@ -175,6 +211,11 @@ button {
     </div>
 
     <div id="resultado" class="result"></div>
+
+    <div class="footer">
+        Em caso de dúvidas, entre em contato:<br>
+        <strong>MDRConceicao@cetiqt.senai.br</strong>
+    </div>
 </div>
 
 <script>
@@ -231,13 +272,14 @@ function calcular() {
     }
 
     const diasUteis = diasUteisRestantesHoje();
-
     const hRest = Math.floor(restante / 60);
     const mRest = restante % 60;
 
     const mediaDia = Math.ceil(restante / diasUteis);
     const hMedia = Math.floor(mediaDia / 60);
     const mMedia = mediaDia % 60;
+
+    const progresso = Math.min((feitosMin / totalMin) * 100, 100).toFixed(1);
 
     resultado.className = "result";
     resultado.innerHTML = `
@@ -249,6 +291,13 @@ function calcular() {
         </div>
         <div><strong>Média diária necessária:</strong>
             <span class="highlight">${hMedia}h ${mMedia}min</span>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:${progresso}%"></div>
+            </div>
+            <div class="progress-text">${progresso}% concluído</div>
         </div>
     `;
 }
