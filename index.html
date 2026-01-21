@@ -16,7 +16,7 @@
             background: white;
             padding: 25px;
             border-radius: 10px;
-            width: 340px;
+            width: 360px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         h2 {
@@ -53,6 +53,11 @@
             padding: 10px;
             border-radius: 5px;
         }
+        .info {
+            font-size: 13px;
+            color: #555;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -60,14 +65,16 @@
 <div class="container">
     <h2>Compensação de Horas</h2>
 
-    <label>Horas totais a compensar:</label>
-    <input type="number" id="horasTotais" value="120">
+    <label>Total de horas a compensar:</label>
+    <input type="number" value="120" disabled>
 
     <label>Horas já feitas:</label>
     <input type="number" id="horasFeitas" placeholder="Ex: 10">
 
     <label>Minutos já feitos:</label>
     <input type="number" id="minutosFeitos" placeholder="Ex: 30">
+
+    <div class="info">Cálculo baseado em <strong>218 dias úteis</strong></div>
 
     <button onclick="calcular()">Calcular</button>
 
@@ -76,34 +83,35 @@
 
 <script>
 function calcular() {
-    const horasTotais = Number(document.getElementById("horasTotais").value);
+    const TOTAL_HORAS = 120;
+    const DIAS_UTEIS = 218;
+
     const horasFeitas = Number(document.getElementById("horasFeitas").value);
     const minutosFeitos = Number(document.getElementById("minutosFeitos").value);
 
-    if (!horasTotais) {
-        document.getElementById("resultado").innerHTML =
-            "Informe o total de horas a compensar.";
-        return;
-    }
-
-    // Converte tudo para minutos
-    const totalMinutos = horasTotais * 60;
+    const totalMinutos = TOTAL_HORAS * 60;
     const feitosMinutos = (horasFeitas * 60) + minutosFeitos;
     const restantesMinutos = totalMinutos - feitosMinutos;
 
-    if (restantesMinutos < 0) {
+    if (restantesMinutos <= 0) {
         document.getElementById("resultado").innerHTML =
-            "Você já compensou mais horas do que o necessário 🎉";
+            "🎉 Você já cumpriu toda a compensação!";
         return;
     }
 
     const horasRestantes = Math.floor(restantesMinutos / 60);
     const minutosRestantes = restantesMinutos % 60;
 
+    // Média diária
+    const mediaMinutosDia = Math.ceil(restantesMinutos / DIAS_UTEIS);
+    const mediaHoras = Math.floor(mediaMinutosDia / 60);
+    const mediaMinutos = mediaMinutosDia % 60;
+
     document.getElementById("resultado").innerHTML = `
-        <strong>Total a compensar:</strong> ${horasTotais}h<br>
         <strong>Já compensado:</strong> ${horasFeitas}h ${minutosFeitos}min<br>
-        <strong>Faltam:</strong> ${horasRestantes}h ${minutosRestantes}min
+        <strong>Faltam:</strong> ${horasRestantes}h ${minutosRestantes}min<br><br>
+        <strong>Média diária necessária:</strong><br>
+        ${mediaHoras}h ${mediaMinutos}min por dia
     `;
 }
 </script>
