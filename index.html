@@ -5,112 +5,169 @@
 <title>Calculadora de Compensação – SENAI CETIQT</title>
 
 <style>
-/* (CSS igual ao anterior – mantive para não poluir a explicação) */
 :root {
     --primary: #1e40af;
     --primary-dark: #1e3a8a;
+    --bg: #f1f5f9;
     --card: #ffffff;
     --text: #0f172a;
     --muted: #64748b;
     --border: #e2e8f0;
 }
+
 * { box-sizing: border-box; }
+
 body {
     margin: 0;
     font-family: "Segoe UI", system-ui, sans-serif;
     background: linear-gradient(135deg, #e0e7ff, #f8fafc);
     min-height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
+
 .card {
-    width: 400px;
     background: var(--card);
+    width: 390px;
     border-radius: 20px;
     padding: 28px;
-    box-shadow: 0 20px 35px rgba(0,0,0,.12);
+    box-shadow: 0 20px 35px rgba(0,0,0,0.12);
 }
+
 .header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
-.brand {
+
+.header .brand {
     font-size: 22px;
     font-weight: 800;
     color: var(--primary);
+    letter-spacing: 1px;
 }
+
 .header h1 {
     font-size: 18px;
     margin: 6px 0 0;
+    color: var(--text);
 }
+
 .header p {
     font-size: 13px;
     color: var(--muted);
+    margin-top: 4px;
 }
-.field { margin-bottom: 14px; }
+
+.field {
+    margin-bottom: 14px;
+}
+
 label {
     font-size: 13px;
     font-weight: 600;
+    color: var(--text);
 }
+
 input {
     width: 100%;
-    padding: 10px;
     margin-top: 6px;
+    padding: 10px 12px;
     border-radius: 10px;
     border: 1px solid var(--border);
+    font-size: 14px;
 }
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(30,64,175,0.15);
+}
+
+input:disabled {
+    background: #f8fafc;
+    color: var(--muted);
+}
+
 .actions {
     display: flex;
     gap: 10px;
     margin-top: 15px;
 }
+
 button {
     flex: 1;
     padding: 12px;
     border-radius: 12px;
     border: none;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
 }
-.btn-primary { background: var(--primary); color: white; }
-.btn-secondary { background: #e5e7eb; }
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.btn-secondary:hover {
+    background: #d1d5db;
+}
+
 .result {
     margin-top: 18px;
     padding: 16px;
     border-radius: 14px;
     background: #f8fafc;
     border: 1px solid var(--border);
+    font-size: 14px;
+    line-height: 1.6;
 }
+
 .highlight {
     color: var(--primary-dark);
     font-weight: 600;
 }
+
+.success {
+    background: #ecfdf5;
+    border-color: #34d399;
+    color: #065f46;
+}
 </style>
 </head>
-
 <body>
 
 <div class="card">
     <div class="header">
+        <!-- 🔹 TEXTO ALTERADO AQUI -->
         <div class="brand">SENAI – CETIQT</div>
         <h1>Compensação de Horas</h1>
-        <p>Base anual: 120h • 233 dias úteis</p>
+        <p>Base: 120h • 233 dias úteis</p>
     </div>
 
     <div class="field">
-        <label>Data atual</label>
-        <input type="date" id="dataAtual">
+        <label>Total a compensar</label>
+        <input type="text" value="120 horas" disabled>
     </div>
 
     <div class="field">
         <label>Horas já feitas</label>
-        <input type="number" id="horasFeitas">
+        <input type="number" id="horasFeitas" placeholder="Ex: 10">
     </div>
 
     <div class="field">
         <label>Minutos já feitos</label>
-        <input type="number" id="minutosFeitos">
+        <input type="number" id="minutosFeitos" placeholder="Ex: 30">
     </div>
 
     <div class="actions">
@@ -122,58 +179,51 @@ button {
 </div>
 
 <script>
-const TOTAL_MINUTOS = 120 * 60;
-const TOTAL_DIAS_UTEIS = 233;
-
-// Conta dias úteis de janeiro até a data atual
-function diasUteisPassados(data) {
-    let inicio = new Date(data.getFullYear(), 0, 1);
-    let count = 0;
-
-    while (inicio < data) {
-        const dia = inicio.getDay();
-        if (dia !== 0 && dia !== 6) count++;
-        inicio.setDate(inicio.getDate() + 1);
-    }
-    return count;
-}
-
 function calcular() {
-    const data = new Date(document.getElementById("dataAtual").value);
+    const TOTAL_HORAS = 120;
+    const DIAS_UTEIS = 233;
+
     const horas = Number(document.getElementById("horasFeitas").value);
     const minutos = Number(document.getElementById("minutosFeitos").value);
 
-    const feitos = (horas * 60) + minutos;
-    const restante = TOTAL_MINUTOS - feitos;
+    const totalMin = TOTAL_HORAS * 60;
+    const feitosMin = (horas * 60) + minutos;
+    const restante = totalMin - feitosMin;
+
+    const resultado = document.getElementById("resultado");
 
     if (restante <= 0) {
-        document.getElementById("resultado").innerHTML =
-            "🎉 <strong>Compensação concluída!</strong>";
+        resultado.className = "result success";
+        resultado.innerHTML = "🎉 <strong>Compensação concluída!</strong>";
         return;
     }
 
-    const uteisPassados = diasUteisPassados(data);
-    const uteisRestantes = TOTAL_DIAS_UTEIS - uteisPassados;
+    const hRest = Math.floor(restante / 60);
+    const mRest = restante % 60;
 
-    const mediaMin = Math.ceil(restante / uteisRestantes);
-    const hMedia = Math.floor(mediaMin / 60);
-    const mMedia = mediaMin % 60;
+    const mediaDia = Math.ceil(restante / DIAS_UTEIS);
+    const hMedia = Math.floor(mediaDia / 60);
+    const mMedia = mediaDia % 60;
 
-    document.getElementById("resultado").innerHTML = `
-        <div><strong>Dias úteis restantes:</strong> ${uteisRestantes}</div>
-        <div><strong>Média diária real:</strong>
+    resultado.className = "result";
+    resultado.innerHTML = `
+        <div><strong>Faltam:</strong>
+            <span class="highlight">${hRest}h ${mRest}min</span>
+        </div>
+        <div><strong>Média diária:</strong>
             <span class="highlight">${hMedia}h ${mMedia}min</span>
         </div>
     `;
 }
 
 function limpar() {
-    document.getElementById("dataAtual").value = "";
     document.getElementById("horasFeitas").value = "";
     document.getElementById("minutosFeitos").value = "";
     document.getElementById("resultado").innerHTML = "";
+    document.getElementById("resultado").className = "result";
 }
 </script>
 
 </body>
 </html>
+
