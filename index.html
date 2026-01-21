@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Calculadora de Horas de Compensação</title>
+    <title>Calculadora de Compensação de Horas</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,7 +16,7 @@
             background: white;
             padding: 25px;
             border-radius: 10px;
-            width: 320px;
+            width: 340px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         h2 {
@@ -25,15 +25,18 @@
         }
         label {
             font-weight: bold;
+            display: block;
+            margin-top: 10px;
         }
         input {
             width: 100%;
             padding: 8px;
-            margin: 6px 0 12px 0;
+            margin-top: 5px;
         }
         button {
             width: 100%;
             padding: 10px;
+            margin-top: 15px;
             background: #0a66c2;
             color: white;
             border: none;
@@ -55,16 +58,16 @@
 <body>
 
 <div class="container">
-    <h2>Calculadora de Horas</h2>
+    <h2>Compensação de Horas</h2>
 
-    <label>Dias úteis:</label>
-    <input type="number" id="dias" placeholder="Ex: 218">
+    <label>Horas totais a compensar:</label>
+    <input type="number" id="horasTotais" value="120">
 
-    <label>Horas por dia:</label>
-    <input type="number" id="horasDia" placeholder="Ex: 8">
+    <label>Horas já feitas:</label>
+    <input type="number" id="horasFeitas" placeholder="Ex: 10">
 
-    <label>Horas já compensadas:</label>
-    <input type="number" id="horasFeitas" placeholder="Ex: 40">
+    <label>Minutos já feitos:</label>
+    <input type="number" id="minutosFeitos" placeholder="Ex: 30">
 
     <button onclick="calcular()">Calcular</button>
 
@@ -73,23 +76,34 @@
 
 <script>
 function calcular() {
-    const dias = Number(document.getElementById("dias").value);
-    const horasDia = Number(document.getElementById("horasDia").value);
+    const horasTotais = Number(document.getElementById("horasTotais").value);
     const horasFeitas = Number(document.getElementById("horasFeitas").value);
+    const minutosFeitos = Number(document.getElementById("minutosFeitos").value);
 
-    if (!dias || !horasDia) {
+    if (!horasTotais) {
         document.getElementById("resultado").innerHTML =
-            "Preencha os campos corretamente.";
+            "Informe o total de horas a compensar.";
         return;
     }
 
-    const totalHoras = dias * horasDia;
-    const horasRestantes = totalHoras - horasFeitas;
+    // Converte tudo para minutos
+    const totalMinutos = horasTotais * 60;
+    const feitosMinutos = (horasFeitas * 60) + minutosFeitos;
+    const restantesMinutos = totalMinutos - feitosMinutos;
+
+    if (restantesMinutos < 0) {
+        document.getElementById("resultado").innerHTML =
+            "Você já compensou mais horas do que o necessário 🎉";
+        return;
+    }
+
+    const horasRestantes = Math.floor(restantesMinutos / 60);
+    const minutosRestantes = restantesMinutos % 60;
 
     document.getElementById("resultado").innerHTML = `
-        <strong>Total de horas:</strong> ${totalHoras}h<br>
-        <strong>Horas já feitas:</strong> ${horasFeitas}h<br>
-        <strong>Horas restantes:</strong> ${horasRestantes}h
+        <strong>Total a compensar:</strong> ${horasTotais}h<br>
+        <strong>Já compensado:</strong> ${horasFeitas}h ${minutosFeitos}min<br>
+        <strong>Faltam:</strong> ${horasRestantes}h ${minutosRestantes}min
     `;
 }
 </script>
