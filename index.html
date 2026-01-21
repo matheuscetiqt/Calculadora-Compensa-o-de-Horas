@@ -1,84 +1,157 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Calculadora de Compensação de Horas</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            width: 360px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 15px;
-            background: #0a66c2;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #004182;
-        }
-        .resultado {
-            margin-top: 15px;
-            background: #eef2f7;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .info {
-            font-size: 13px;
-            color: #555;
-            margin-top: 5px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Calculadora de Compensação</title>
+
+<style>
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    background: var(--card);
+    width: 380px;
+    border-radius: 18px;
+    padding: 26px;
+    box-shadow: 0 20px 35px rgba(0,0,0,0.12);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 20px;
+    margin: 0;
+    color: var(--text);
+}
+
+.header p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.field {
+    margin-bottom: 14px;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+input {
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+}
+
+input:disabled {
+    background: #f8fafc;
+    color: var(--muted);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    background: var(--primary);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.result {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.highlight {
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+.success {
+    background: #ecfdf5;
+    border-color: #34d399;
+    color: #065f46;
+}
+</style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Compensação de Horas</h2>
+<div class="card">
+    <div class="header">
+        <h1>Compensação de Horas</h1>
+        <p>Base: 120h • 218 dias úteis</p>
+    </div>
 
-    <label>Total de horas a compensar:</label>
-    <input type="number" value="120" disabled>
+    <div class="field">
+        <label>Total a compensar</label>
+        <input type="text" value="120 horas" disabled>
+    </div>
 
-    <label>Horas já feitas:</label>
-    <input type="number" id="horasFeitas" placeholder="Ex: 10">
+    <div class="field">
+        <label>Horas já feitas</label>
+        <input type="number" id="horasFeitas" placeholder="Ex: 10">
+    </div>
 
-    <label>Minutos já feitos:</label>
-    <input type="number" id="minutosFeitos" placeholder="Ex: 30">
-
-    <div class="info">Cálculo baseado em <strong>218 dias úteis</strong></div>
+    <div class="field">
+        <label>Minutos já feitos</label>
+        <input type="number" id="minutosFeitos" placeholder="Ex: 30">
+    </div>
 
     <button onclick="calcular()">Calcular</button>
 
-    <div class="resultado" id="resultado"></div>
+    <div id="resultado" class="result"></div>
 </div>
 
 <script>
@@ -86,32 +159,36 @@ function calcular() {
     const TOTAL_HORAS = 120;
     const DIAS_UTEIS = 218;
 
-    const horasFeitas = Number(document.getElementById("horasFeitas").value);
-    const minutosFeitos = Number(document.getElementById("minutosFeitos").value);
+    const horas = Number(document.getElementById("horasFeitas").value);
+    const minutos = Number(document.getElementById("minutosFeitos").value);
 
-    const totalMinutos = TOTAL_HORAS * 60;
-    const feitosMinutos = (horasFeitas * 60) + minutosFeitos;
-    const restantesMinutos = totalMinutos - feitosMinutos;
+    const totalMin = TOTAL_HORAS * 60;
+    const feitosMin = (horas * 60) + minutos;
+    const restante = totalMin - feitosMin;
 
-    if (restantesMinutos <= 0) {
-        document.getElementById("resultado").innerHTML =
-            "🎉 Você já cumpriu toda a compensação!";
+    const resultado = document.getElementById("resultado");
+
+    if (restante <= 0) {
+        resultado.className = "result success";
+        resultado.innerHTML = "🎉 <strong>Compensação concluída!</strong>";
         return;
     }
 
-    const horasRestantes = Math.floor(restantesMinutos / 60);
-    const minutosRestantes = restantesMinutos % 60;
+    const hRest = Math.floor(restante / 60);
+    const mRest = restante % 60;
 
-    // Média diária
-    const mediaMinutosDia = Math.ceil(restantesMinutos / DIAS_UTEIS);
-    const mediaHoras = Math.floor(mediaMinutosDia / 60);
-    const mediaMinutos = mediaMinutosDia % 60;
+    const mediaDia = Math.ceil(restante / DIAS_UTEIS);
+    const hMedia = Math.floor(mediaDia / 60);
+    const mMedia = mediaDia % 60;
 
-    document.getElementById("resultado").innerHTML = `
-        <strong>Já compensado:</strong> ${horasFeitas}h ${minutosFeitos}min<br>
-        <strong>Faltam:</strong> ${horasRestantes}h ${minutosRestantes}min<br><br>
-        <strong>Média diária necessária:</strong><br>
-        ${mediaHoras}h ${mediaMinutos}min por dia
+    resultado.className = "result";
+    resultado.innerHTML = `
+        <div><strong>Faltam:</strong> 
+            <span class="highlight">${hRest}h ${mRest}min</span>
+        </div>
+        <div><strong>Média diária:</strong> 
+            <span class="highlight">${hMedia}h ${mMedia}min</span>
+        </div>
     `;
 }
 </script>
