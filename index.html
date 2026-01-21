@@ -149,10 +149,9 @@ button {
 
 <div class="card">
     <div class="header">
-        <!-- 🔹 TEXTO ALTERADO AQUI -->
         <div class="brand">SENAI – CETIQT</div>
         <h1>Compensação de Horas</h1>
-        <p>Base: 120h • 233 dias úteis</p>
+        <p>Base anual oficial</p>
     </div>
 
     <div class="field">
@@ -179,10 +178,43 @@ button {
 </div>
 
 <script>
-function calcular() {
-    const TOTAL_HORAS = 120;
-    const DIAS_UTEIS = 233;
+// 🔹 BASE OFICIAL
+const TOTAL_HORAS = 120;
+const TOTAL_DIAS_UTEIS = 233;
 
+// 🔹 FERIADOS + COMPENSADOS — SENAI CETIQT 2026
+const feriados = [
+  "2026-01-01","2026-01-02","2026-01-19","2026-01-20",
+  "2026-02-13","2026-02-16","2026-02-17","2026-02-18",
+  "2026-04-03","2026-04-20","2026-04-21","2026-04-23",
+  "2026-05-01",
+  "2026-06-04","2026-06-05",
+  "2026-09-07",
+  "2026-10-12",
+  "2026-11-02","2026-11-20",
+  "2026-12-21","2026-12-22","2026-12-23","2026-12-24",
+  "2026-12-25","2026-12-28","2026-12-29","2026-12-30","2026-12-31"
+];
+
+function isDiaUtil(data) {
+    const dia = data.getDay();
+    const iso = data.toISOString().slice(0,10);
+    return dia !== 0 && dia !== 6 && !feriados.includes(iso);
+}
+
+function diasUteisRestantesHoje() {
+    let data = new Date("2026-01-01");
+    const hoje = new Date();
+    let usados = 0;
+
+    while (data < hoje) {
+        if (isDiaUtil(data)) usados++;
+        data.setDate(data.getDate() + 1);
+    }
+    return TOTAL_DIAS_UTEIS - usados;
+}
+
+function calcular() {
     const horas = Number(document.getElementById("horasFeitas").value);
     const minutos = Number(document.getElementById("minutosFeitos").value);
 
@@ -198,10 +230,12 @@ function calcular() {
         return;
     }
 
+    const diasUteis = diasUteisRestantesHoje();
+
     const hRest = Math.floor(restante / 60);
     const mRest = restante % 60;
 
-    const mediaDia = Math.ceil(restante / DIAS_UTEIS);
+    const mediaDia = Math.ceil(restante / diasUteis);
     const hMedia = Math.floor(mediaDia / 60);
     const mMedia = mediaDia % 60;
 
@@ -210,7 +244,7 @@ function calcular() {
         <div><strong>Faltam:</strong>
             <span class="highlight">${hRest}h ${mRest}min</span>
         </div>
-        <div><strong>Média diária:</strong>
+        <div><strong>Média diária necessária:</strong>
             <span class="highlight">${hMedia}h ${mMedia}min</span>
         </div>
     `;
@@ -226,4 +260,3 @@ function limpar() {
 
 </body>
 </html>
-
