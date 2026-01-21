@@ -1,229 +1,155 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Calculadora de Compensação – SENAI CETIQT</title>
+  <meta charset="UTF-8" />
+  <title>Calculadora de Compensação – SENAI - CETIQT</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
 
-<style>
-:root {
-    --primary: #1e40af;
-    --primary-dark: #1e3a8a;
-    --bg: #f1f5f9;
-    --card: #ffffff;
-    --text: #0f172a;
-    --muted: #64748b;
-    --border: #e2e8f0;
-}
+    .card {
+      background: #fff;
+      padding: 25px;
+      width: 420px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
 
-* { box-sizing: border-box; }
+    h1 {
+      text-align: center;
+      color: #005ca9;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
 
-body {
-    margin: 0;
-    font-family: "Segoe UI", system-ui, sans-serif;
-    background: linear-gradient(135deg, #e0e7ff, #f8fafc);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+    }
 
-.card {
-    background: var(--card);
-    width: 390px;
-    border-radius: 20px;
-    padding: 28px;
-    box-shadow: 0 20px 35px rgba(0,0,0,0.12);
-}
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      font-size: 14px;
+    }
 
-.header {
-    text-align: center;
-    margin-bottom: 22px;
-}
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-.header .brand {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--primary);
-    letter-spacing: 1px;
-}
+    .calcular {
+      background: #005ca9;
+      color: #fff;
+    }
 
-.header h1 {
-    font-size: 18px;
-    margin: 6px 0 0;
-    color: var(--text);
-}
+    .limpar {
+      background: #ccc;
+      margin-top: 10px;
+    }
 
-.header p {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 4px;
-}
-
-.field {
-    margin-bottom: 14px;
-}
-
-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-}
-
-input {
-    width: 100%;
-    margin-top: 6px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    font-size: 14px;
-}
-
-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(30,64,175,0.15);
-}
-
-input:disabled {
-    background: #f8fafc;
-    color: var(--muted);
-}
-
-.actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-button {
-    flex: 1;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.btn-primary {
-    background: var(--primary);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: var(--primary-dark);
-}
-
-.btn-secondary {
-    background: #e5e7eb;
-    color: #111827;
-}
-
-.btn-secondary:hover {
-    background: #d1d5db;
-}
-
-.result {
-    margin-top: 18px;
-    padding: 16px;
-    border-radius: 14px;
-    background: #f8fafc;
-    border: 1px solid var(--border);
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.highlight {
-    color: var(--primary-dark);
-    font-weight: 600;
-}
-
-.success {
-    background: #ecfdf5;
-    border-color: #34d399;
-    color: #065f46;
-}
-</style>
+    .resultado {
+      margin-top: 20px;
+      background: #eef3f8;
+      padding: 15px;
+      border-radius: 6px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="card">
-    <div class="header">
-        <!-- 🔹 TEXTO ALTERADO AQUI -->
-        <div class="brand">SENAI – CETIQT</div>
-        <h1>Compensação de Horas</h1>
-        <p>Base: 120h • 233 dias úteis</p>
-    </div>
+  <div class="card">
+    <h1>SENAI - CETIQT</h1>
 
-    <div class="field">
-        <label>Total a compensar</label>
-        <input type="text" value="120 horas" disabled>
-    </div>
+    <label>Total de horas a compensar</label>
+    <input type="number" id="horasTotal" placeholder="Ex: 120">
 
-    <div class="field">
-        <label>Horas já feitas</label>
-        <input type="number" id="horasFeitas" placeholder="Ex: 10">
-    </div>
+    <label>Minutos a compensar</label>
+    <input type="number" id="minutosTotal" placeholder="Ex: 0">
 
-    <div class="field">
-        <label>Minutos já feitos</label>
-        <input type="number" id="minutosFeitos" placeholder="Ex: 30">
-    </div>
+    <label>Data de referência</label>
+    <input type="date" id="dataRef">
 
-    <div class="actions">
-        <button class="btn-primary" onclick="calcular()">Calcular</button>
-        <button class="btn-secondary" onclick="limpar()">Limpar</button>
-    </div>
+    <button class="calcular" onclick="calcular()">Calcular</button>
+    <button class="limpar" onclick="limpar()">Limpar dados</button>
 
-    <div id="resultado" class="result"></div>
-</div>
+    <div class="resultado" id="resultado"></div>
+  </div>
 
-<script>
-function calcular() {
-    const TOTAL_HORAS = 120;
-    const DIAS_UTEIS = 233;
+  <script>
+    const feriados = [
+      "2026-01-01","2026-01-02","2026-01-19","2026-01-20",
+      "2026-02-13","2026-02-16","2026-02-17","2026-02-18",
+      "2026-04-03","2026-04-20","2026-04-21","2026-04-23",
+      "2026-05-01",
+      "2026-06-04","2026-06-05",
+      "2026-09-07",
+      "2026-10-12",
+      "2026-11-02","2026-11-20",
+      "2026-12-21","2026-12-22","2026-12-23","2026-12-24",
+      "2026-12-25","2026-12-28","2026-12-29","2026-12-30","2026-12-31"
+    ];
 
-    const horas = Number(document.getElementById("horasFeitas").value);
-    const minutos = Number(document.getElementById("minutosFeitos").value);
+    const TOTAL_DIAS_UTEIS = 233;
 
-    const totalMin = TOTAL_HORAS * 60;
-    const feitosMin = (horas * 60) + minutos;
-    const restante = totalMin - feitosMin;
-
-    const resultado = document.getElementById("resultado");
-
-    if (restante <= 0) {
-        resultado.className = "result success";
-        resultado.innerHTML = "🎉 <strong>Compensação concluída!</strong>";
-        return;
+    function isDiaUtil(data) {
+      const dia = data.getDay();
+      const iso = data.toISOString().slice(0,10);
+      return dia !== 0 && dia !== 6 && !feriados.includes(iso);
     }
 
-    const hRest = Math.floor(restante / 60);
-    const mRest = restante % 60;
+    function diasUteisAte(dataLimite) {
+      let data = new Date("2026-01-01");
+      let count = 0;
 
-    const mediaDia = Math.ceil(restante / DIAS_UTEIS);
-    const hMedia = Math.floor(mediaDia / 60);
-    const mMedia = mediaDia % 60;
+      while (data < dataLimite) {
+        if (isDiaUtil(data)) count++;
+        data.setDate(data.getDate() + 1);
+      }
+      return count;
+    }
 
-    resultado.className = "result";
-    resultado.innerHTML = `
-        <div><strong>Faltam:</strong>
-            <span class="highlight">${hRest}h ${mRest}min</span>
-        </div>
-        <div><strong>Média diária:</strong>
-            <span class="highlight">${hMedia}h ${mMedia}min</span>
-        </div>
-    `;
-}
+    function calcular() {
+      const h = parseInt(document.getElementById("horasTotal").value) || 0;
+      const m = parseInt(document.getElementById("minutosTotal").value) || 0;
+      const dataRef = new Date(document.getElementById("dataRef").value);
 
-function limpar() {
-    document.getElementById("horasFeitas").value = "";
-    document.getElementById("minutosFeitos").value = "";
-    document.getElementById("resultado").innerHTML = "";
-    document.getElementById("resultado").className = "result";
-}
-</script>
+      if (!dataRef) return;
+
+      const minutosTotais = h * 60 + m;
+      const diasPassados = diasUteisAte(dataRef);
+      const diasRestantes = TOTAL_DIAS_UTEIS - diasPassados;
+
+      const mediaMin = minutosTotais / diasRestantes;
+      const mediaH = Math.floor(mediaMin / 60);
+      const mediaM = Math.round(mediaMin % 60);
+
+      document.getElementById("resultado").innerHTML = `
+        <strong>Dias úteis restantes:</strong> ${diasRestantes}<br><br>
+        <strong>Média diária necessária:</strong><br>
+        ${mediaH}h ${mediaM}min por dia
+      `;
+    }
+
+    function limpar() {
+      document.getElementById("horasTotal").value = "";
+      document.getElementById("minutosTotal").value = "";
+      document.getElementById("dataRef").value = "";
+      document.getElementById("resultado").innerHTML = "";
+    }
+  </script>
 
 </body>
 </html>
-
