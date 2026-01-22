@@ -28,30 +28,14 @@ body {
     justify-content: center;
 }
 
-/* 🔹 CARD */
 .card {
     background: var(--card);
     width: 390px;
     border-radius: 20px;
     padding: 28px;
     box-shadow: 0 20px 35px rgba(0,0,0,0.12);
-    position: relative;
 }
 
-/* 🔹 BADGE */
-.badge {
-    position: absolute;
-    top: 14px;
-    right: 16px;
-    background: #e0e7ff;
-    color: var(--primary-dark);
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-weight: 600;
-}
-
-/* 🔹 HEADER */
 .header {
     text-align: center;
     margin-bottom: 22px;
@@ -76,7 +60,6 @@ body {
     margin-top: 4px;
 }
 
-/* 🔹 FORM */
 .field {
     margin-bottom: 14px;
 }
@@ -107,7 +90,6 @@ input:disabled {
     color: var(--muted);
 }
 
-/* 🔹 BUTTONS */
 .actions {
     display: flex;
     gap: 10px;
@@ -142,7 +124,6 @@ button {
     background: #d1d5db;
 }
 
-/* 🔹 RESULTADO + FADE-IN */
 .result {
     margin-top: 18px;
     padding: 16px;
@@ -151,19 +132,6 @@ button {
     border: 1px solid var(--border);
     font-size: 14px;
     line-height: 1.6;
-    opacity: 0;
-    animation: fadeIn 0.5s ease forwards;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .highlight {
@@ -194,7 +162,7 @@ button {
     height: 100%;
     width: 0%;
     background: linear-gradient(90deg, var(--success), #16a34a);
-    transition: width 0.6s ease;
+    transition: width 0.4s ease;
 }
 
 .progress-text {
@@ -216,8 +184,6 @@ button {
 <body>
 
 <div class="card">
-    <div class="badge">Uso interno • SENAI CETIQT</div>
-
     <div class="header">
         <div class="brand">SENAI – CETIQT</div>
         <h1>Compensação de Horas</h1>
@@ -244,18 +210,20 @@ button {
         <button class="btn-secondary" onclick="limpar()">Limpar</button>
     </div>
 
-    <div id="resultado"></div>
+    <div id="resultado" class="result"></div>
 
     <div class="footer">
-        Em caso de dúvidas:<br>
+        Em caso de dúvidas, entre em contato:<br>
         <strong>MDRConceicao@cetiqt.senai.br</strong>
     </div>
 </div>
 
 <script>
+// 🔹 BASE OFICIAL
 const TOTAL_HORAS = 120;
 const TOTAL_DIAS_UTEIS = 233;
 
+// 🔹 FERIADOS + COMPENSADOS — SENAI CETIQT 2026
 const feriados = [
   "2026-01-01","2026-01-02","2026-01-19","2026-01-20",
   "2026-02-13","2026-02-16","2026-02-17","2026-02-18",
@@ -298,7 +266,8 @@ function calcular() {
     const resultado = document.getElementById("resultado");
 
     if (restante <= 0) {
-        resultado.innerHTML = `<div class="result success">🎉 <strong>Compensação concluída!</strong></div>`;
+        resultado.className = "result success";
+        resultado.innerHTML = "🎉 <strong>Compensação concluída!</strong>";
         return;
     }
 
@@ -312,18 +281,23 @@ function calcular() {
 
     const progresso = Math.min((feitosMin / totalMin) * 100, 100).toFixed(1);
 
+    resultado.className = "result";
     resultado.innerHTML = `
-        <div class="result">
-            <div><strong>Dias úteis restantes:</strong> <span class="highlight">${diasUteis}</span></div>
-            <div><strong>Faltam:</strong> <span class="highlight">${hRest}h ${mRest}min</span></div>
-            <div><strong>Média diária necessária:</strong> <span class="highlight">${hMedia}h ${mMedia}min</span></div>
+        <div><strong>Dias úteis restantes:</strong>
+            <span class="highlight">${diasUteis}</span>
+        </div>
+        <div><strong>Faltam:</strong>
+            <span class="highlight">${hRest}h ${mRest}min</span>
+        </div>
+        <div><strong>Média diária necessária:</strong>
+            <span class="highlight">${hMedia}h ${mMedia}min</span>
+        </div>
 
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width:${progresso}%"></div>
-                </div>
-                <div class="progress-text">${progresso}% concluído</div>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:${progresso}%"></div>
             </div>
+            <div class="progress-text">${progresso}% concluído</div>
         </div>
     `;
 }
@@ -332,8 +306,10 @@ function limpar() {
     document.getElementById("horasFeitas").value = "";
     document.getElementById("minutosFeitos").value = "";
     document.getElementById("resultado").innerHTML = "";
+    document.getElementById("resultado").className = "result";
 }
 </script>
 
 </body>
 </html>
+
