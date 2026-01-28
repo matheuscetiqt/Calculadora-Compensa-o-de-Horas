@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gestão de Professores - SENAI CETIQT</title>
+<title>Calculadora de Compensação de Horas</title>
 <style>
     body {
         font-family: 'Segoe UI', sans-serif;
-        background-color: #f5f5f5;
+        background: linear-gradient(180deg,#dbeafe,#bfdbfe,#e0f2fe);
         margin: 0;
         padding: 0;
     }
@@ -16,229 +16,82 @@
         color: white;
         padding: 20px;
         text-align: center;
-        font-size: 1.6em;
+        font-size: 1.5em;
         font-weight: bold;
     }
     main {
-        max-width: 900px;
-        margin: 30px auto;
-        background-color: white;
-        padding: 25px;
+        padding: 20px;
+        max-width: 600px;
+        margin: auto;
+        background: white;
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    h2 {
-        color: #1e3a8a;
     }
     label {
         display: block;
         margin-top: 10px;
         font-weight: bold;
     }
-    input, select, button {
+    input {
         width: 100%;
         padding: 8px;
         margin-top: 5px;
         border-radius: 5px;
         border: 1px solid #ccc;
         box-sizing: border-box;
-        font-size: 1em;
     }
     button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+        border-radius: 5px;
+        border: none;
         background-color: #1e3a8a;
         color: white;
         font-weight: bold;
-        margin-top: 15px;
         cursor: pointer;
         transition: 0.3s;
     }
     button:hover {
         background-color: #374eb2;
     }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-    th, td {
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-        text-align: left;
-    }
-    th {
-        background-color: #1e3a8a;
-        color: white;
-    }
-    .action-btn {
-        padding: 5px 10px;
-        margin-right: 5px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        color: white;
-        font-size: 0.9em;
-    }
-    .edit-btn { background-color: #f59e0b; }
-    .edit-btn:hover { background-color: #d97706; }
-    .delete-btn { background-color: #ef4444; }
-    .delete-btn:hover { background-color: #b91c1c; }
     .resultado {
-        margin-top: 15px;
-        padding: 10px;
+        margin-top: 20px;
+        padding: 15px;
         background-color: #f3f4f6;
         border-radius: 8px;
+        font-weight: bold;
+        text-align: center;
     }
 </style>
 </head>
 <body>
-<header>Gestão de Professores - SENAI CETIQT</header>
+<header>Calculadora de Compensação de Horas</header>
 <main>
-    <h2>Cadastro de Professor</h2>
-    <label>Nome do Professor:</label>
-    <input type="text" id="nomeProfessor">
+    <label>Horas Trabalhadas:</label>
+    <input type="number" id="horasTrabalhadas" min="0" step="0.5">
 
-    <label>Disciplina:</label>
-    <input type="text" id="disciplina">
+    <label>Horas Compensadas:</label>
+    <input type="number" id="horasCompensadas" min="0" step="0.5">
 
-    <label>Valor da Aula (R$):</label>
-    <input type="number" id="valorAula" min="0" step="0.01">
+    <label>Saldo Inicial de Horas:</label>
+    <input type="number" id="saldoInicial" value="0" step="0.5">
 
-    <label>Carga Horária (horas):</label>
-    <input type="number" id="cargaHoraria" min="0" step="1">
+    <button onclick="calcularSaldo()">Calcular Saldo</button>
 
-    <button onclick="cadastrarOuAtualizarProfessor()">Cadastrar / Atualizar</button>
-
-    <h2>Pesquisar Professor</h2>
-    <label>Digite o nome do professor:</label>
-    <input type="text" id="pesquisaNome">
-    <button onclick="pesquisarProfessor()">Pesquisar</button>
-
-    <div class="resultado" id="resultadoPesquisa"></div>
-
-    <h2>Base de Professores</h2>
-    <table id="tabelaProfessores">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Disciplina</th>
-                <th>Valor Aula</th>
-                <th>Carga Horária</th>
-                <th>Valor Total</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Professores cadastrados aparecerão aqui -->
-        </tbody>
-    </table>
+    <div class="resultado" id="resultadoSaldo"></div>
 </main>
 
 <script>
-    let professores = [];
-    let editIndex = -1; // controla se estamos editando
+    function calcularSaldo() {
+        const trabalhadas = parseFloat(document.getElementById('horasTrabalhadas').value) || 0;
+        const compensadas = parseFloat(document.getElementById('horasCompensadas').value) || 0;
+        const saldoInicial = parseFloat(document.getElementById('saldoInicial').value) || 0;
 
-    function cadastrarOuAtualizarProfessor() {
-        const nome = document.getElementById('nomeProfessor').value.trim();
-        const disciplina = document.getElementById('disciplina').value.trim();
-        const valorAula = parseFloat(document.getElementById('valorAula').value);
-        const cargaHoraria = parseInt(document.getElementById('cargaHoraria').value);
+        const saldoFinal = saldoInicial + trabalhadas - compensadas;
 
-        if(!nome || !disciplina || isNaN(valorAula) || isNaN(cargaHoraria)) {
-            alert('Preencha todos os campos corretamente!');
-            return;
-        }
-
-        const professor = {
-            nome,
-            disciplina,
-            valorAula,
-            cargaHoraria,
-            valorTotal: valorAula * cargaHoraria
-        };
-
-        if(editIndex >= 0) {
-            professores[editIndex] = professor;
-            editIndex = -1;
-            alert('Cadastro atualizado com sucesso!');
-        } else {
-            professores.push(professor);
-            alert('Professor cadastrado com sucesso!');
-        }
-
-        limparCampos();
-        atualizarTabela();
-    }
-
-    function pesquisarProfessor() {
-        const pesquisa = document.getElementById('pesquisaNome').value.trim();
-        const resultadoDiv = document.getElementById('resultadoPesquisa');
-
-        if(!pesquisa) {
-            alert('Digite o nome do professor para pesquisar!');
-            return;
-        }
-
-        const professorEncontrado = professores.find(p => p.nome.toLowerCase() === pesquisa.toLowerCase());
-
-        if(professorEncontrado) {
-            resultadoDiv.innerHTML = `
-                <strong>Nome:</strong> ${professorEncontrado.nome}<br>
-                <strong>Disciplina:</strong> ${professorEncontrado.disciplina}<br>
-                <strong>Valor da Aula:</strong> R$ ${professorEncontrado.valorAula.toFixed(2)}<br>
-                <strong>Carga Horária:</strong> ${professorEncontrado.cargaHoraria} horas<br>
-                <strong>Valor Total:</strong> R$ ${professorEncontrado.valorTotal.toFixed(2)}
-            `;
-        } else {
-            resultadoDiv.innerHTML = 'Professor ainda não cadastrado.';
-        }
-    }
-
-    function atualizarTabela() {
-        const tbody = document.querySelector('#tabelaProfessores tbody');
-        tbody.innerHTML = '';
-        professores.forEach((prof, index) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${prof.nome}</td>
-                <td>${prof.disciplina}</td>
-                <td>R$ ${prof.valorAula.toFixed(2)}</td>
-                <td>${prof.cargaHoraria}</td>
-                <td>R$ ${prof.valorTotal.toFixed(2)}</td>
-                <td>
-                    <button class="action-btn edit-btn" onclick="editarProfessor(${index})">Editar</button>
-                    <button class="action-btn delete-btn" onclick="excluirProfessor(${index})">Excluir</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function editarProfessor(index) {
-        const prof = professores[index];
-        document.getElementById('nomeProfessor').value = prof.nome;
-        document.getElementById('disciplina').value = prof.disciplina;
-        document.getElementById('valorAula').value = prof.valorAula;
-        document.getElementById('cargaHoraria').value = prof.cargaHoraria;
-        editIndex = index;
-    }
-
-    function excluirProfessor(index) {
-        if(confirm('Tem certeza que deseja excluir este professor?')) {
-            professores.splice(index, 1);
-            atualizarTabela();
-        }
-    }
-
-    function limparCampos() {
-        document.getElementById('nomeProfessor').value = '';
-        document.getElementById('disciplina').value = '';
-        document.getElementById('valorAula').value = '';
-        document.getElementById('cargaHoraria').value = '';
-        document.getElementById('pesquisaNome').value = '';
-        document.getElementById('resultadoPesquisa').innerHTML = '';
+        document.getElementById('resultadoSaldo').innerText = `Saldo de Horas: ${saldoFinal.toFixed(2)} horas`;
     }
 </script>
 </body>
 </html>
-
-
