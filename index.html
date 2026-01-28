@@ -2,314 +2,243 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Calculadora de Compensação – SENAI CETIQT</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestão de Professores - SENAI CETIQT</title>
 <style>
-:root {
-    --primary: #1e40af;
-    --primary-dark: #1e3a8a;
-    --bg: #f1f5f9;
-    --card: #ffffff;
-    --text: #0f172a;
-    --muted: #64748b;
-    --border: #e2e8f0;
-    --success: #22c55e;
-}
-
-* { box-sizing: border-box; }
-
-body {
-    margin: 0;
-    font-family: "Segoe UI", system-ui, sans-serif;
-    background: linear-gradient(135deg, #e0e7ff, #f8fafc);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.card {
-    background: var(--card);
-    width: 390px;
-    border-radius: 20px;
-    padding: 28px;
-    box-shadow: 0 20px 35px rgba(0,0,0,0.12);
-}
-
-.header {
-    text-align: center;
-    margin-bottom: 22px;
-}
-
-.header .brand {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--primary);
-    letter-spacing: 1px;
-}
-
-.header h1 {
-    font-size: 18px;
-    margin: 6px 0 0;
-    color: var(--text);
-}
-
-.header p {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 4px;
-}
-
-.field {
-    margin-bottom: 14px;
-}
-
-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-}
-
-input {
-    width: 100%;
-    margin-top: 6px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    font-size: 14px;
-}
-
-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(30,64,175,0.15);
-}
-
-input:disabled {
-    background: #f8fafc;
-    color: var(--muted);
-}
-
-.actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-button {
-    flex: 1;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.btn-primary {
-    background: var(--primary);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: var(--primary-dark);
-}
-
-.btn-secondary {
-    background: #e5e7eb;
-    color: #111827;
-}
-
-.btn-secondary:hover {
-    background: #d1d5db;
-}
-
-.result {
-    margin-top: 18px;
-    padding: 16px;
-    border-radius: 14px;
-    background: #f8fafc;
-    border: 1px solid var(--border);
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.highlight {
-    color: var(--primary-dark);
-    font-weight: 600;
-}
-
-.success {
-    background: #ecfdf5;
-    border-color: #34d399;
-    color: #065f46;
-}
-
-/* 🔹 PROGRESSO */
-.progress-container {
-    margin-top: 14px;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 12px;
-    background: #e5e7eb;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--success), #16a34a);
-    transition: width 0.4s ease;
-}
-
-.progress-text {
-    margin-top: 6px;
-    font-size: 12px;
-    color: var(--muted);
-    text-align: right;
-}
-
-/* 🔹 FOOTER */
-.footer {
-    margin-top: 18px;
-    font-size: 12px;
-    color: var(--muted);
-    text-align: center;
-}
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background-color: #1e3a8a;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 1.6em;
+        font-weight: bold;
+    }
+    main {
+        max-width: 900px;
+        margin: 30px auto;
+        background-color: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+        color: #1e3a8a;
+    }
+    label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    input, select, button {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        font-size: 1em;
+    }
+    button {
+        background-color: #1e3a8a;
+        color: white;
+        font-weight: bold;
+        margin-top: 15px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    button:hover {
+        background-color: #374eb2;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    th, td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    th {
+        background-color: #1e3a8a;
+        color: white;
+    }
+    .action-btn {
+        padding: 5px 10px;
+        margin-right: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+        font-size: 0.9em;
+    }
+    .edit-btn { background-color: #f59e0b; }
+    .edit-btn:hover { background-color: #d97706; }
+    .delete-btn { background-color: #ef4444; }
+    .delete-btn:hover { background-color: #b91c1c; }
+    .resultado {
+        margin-top: 15px;
+        padding: 10px;
+        background-color: #f3f4f6;
+        border-radius: 8px;
+    }
 </style>
 </head>
 <body>
+<header>Gestão de Professores - SENAI CETIQT</header>
+<main>
+    <h2>Cadastro de Professor</h2>
+    <label>Nome do Professor:</label>
+    <input type="text" id="nomeProfessor">
 
-<div class="card">
-    <div class="header">
-        <div class="brand">SENAI – CETIQT</div>
-        <h1>Compensação de Horas</h1>
-        <p>Base anual oficial</p>
-    </div>
+    <label>Disciplina:</label>
+    <input type="text" id="disciplina">
 
-    <div class="field">
-        <label>Total a compensar</label>
-        <input type="text" value="120 horas" disabled>
-    </div>
+    <label>Valor da Aula (R$):</label>
+    <input type="number" id="valorAula" min="0" step="0.01">
 
-    <div class="field">
-        <label>Horas já feitas</label>
-        <input type="number" id="horasFeitas" placeholder="Ex: 10">
-    </div>
+    <label>Carga Horária (horas):</label>
+    <input type="number" id="cargaHoraria" min="0" step="1">
 
-    <div class="field">
-        <label>Minutos já feitos</label>
-        <input type="number" id="minutosFeitos" placeholder="Ex: 30">
-    </div>
+    <button onclick="cadastrarOuAtualizarProfessor()">Cadastrar / Atualizar</button>
 
-    <div class="actions">
-        <button class="btn-primary" onclick="calcular()">Calcular</button>
-        <button class="btn-secondary" onclick="limpar()">Limpar</button>
-    </div>
+    <h2>Pesquisar Professor</h2>
+    <label>Digite o nome do professor:</label>
+    <input type="text" id="pesquisaNome">
+    <button onclick="pesquisarProfessor()">Pesquisar</button>
 
-    <div id="resultado" class="result"></div>
+    <div class="resultado" id="resultadoPesquisa"></div>
 
-    <div class="footer">
-        Em caso de dúvidas, entre em contato:<br>
-        <strong>MDRConceicao@cetiqt.senai.br</strong>
-    </div>
-</div>
+    <h2>Base de Professores</h2>
+    <table id="tabelaProfessores">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Disciplina</th>
+                <th>Valor Aula</th>
+                <th>Carga Horária</th>
+                <th>Valor Total</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Professores cadastrados aparecerão aqui -->
+        </tbody>
+    </table>
+</main>
 
 <script>
-// 🔹 BASE OFICIAL
-const TOTAL_HORAS = 120;
-const TOTAL_DIAS_UTEIS = 233;
+    let professores = [];
+    let editIndex = -1; // controla se estamos editando
 
-// 🔹 FERIADOS + COMPENSADOS — SENAI CETIQT 2026
-const feriados = [
-  "2026-01-01","2026-01-02","2026-01-19","2026-01-20",
-  "2026-02-13","2026-02-16","2026-02-17","2026-02-18",
-  "2026-04-03","2026-04-20","2026-04-21","2026-04-23",
-  "2026-05-01",
-  "2026-06-04","2026-06-05",
-  "2026-09-07",
-  "2026-10-12",
-  "2026-11-02","2026-11-20",
-  "2026-12-21","2026-12-22","2026-12-23","2026-12-24",
-  "2026-12-25","2026-12-28","2026-12-29","2026-12-30","2026-12-31"
-];
+    function cadastrarOuAtualizarProfessor() {
+        const nome = document.getElementById('nomeProfessor').value.trim();
+        const disciplina = document.getElementById('disciplina').value.trim();
+        const valorAula = parseFloat(document.getElementById('valorAula').value);
+        const cargaHoraria = parseInt(document.getElementById('cargaHoraria').value);
 
-function isDiaUtil(data) {
-    const dia = data.getDay();
-    const iso = data.toISOString().slice(0,10);
-    return dia !== 0 && dia !== 6 && !feriados.includes(iso);
-}
+        if(!nome || !disciplina || isNaN(valorAula) || isNaN(cargaHoraria)) {
+            alert('Preencha todos os campos corretamente!');
+            return;
+        }
 
-function diasUteisRestantesHoje() {
-    let data = new Date("2026-01-01");
-    const hoje = new Date();
-    let usados = 0;
+        const professor = {
+            nome,
+            disciplina,
+            valorAula,
+            cargaHoraria,
+            valorTotal: valorAula * cargaHoraria
+        };
 
-    while (data < hoje) {
-        if (isDiaUtil(data)) usados++;
-        data.setDate(data.getDate() + 1);
-    }
-    return TOTAL_DIAS_UTEIS - usados;
-}
+        if(editIndex >= 0) {
+            professores[editIndex] = professor;
+            editIndex = -1;
+            alert('Cadastro atualizado com sucesso!');
+        } else {
+            professores.push(professor);
+            alert('Professor cadastrado com sucesso!');
+        }
 
-function calcular() {
-    const horas = Number(document.getElementById("horasFeitas").value);
-    const minutos = Number(document.getElementById("minutosFeitos").value);
-
-    const totalMin = TOTAL_HORAS * 60;
-    const feitosMin = (horas * 60) + minutos;
-    const restante = totalMin - feitosMin;
-
-    const resultado = document.getElementById("resultado");
-
-    if (restante <= 0) {
-        resultado.className = "result success";
-        resultado.innerHTML = "🎉 <strong>Compensação concluída!</strong>";
-        return;
+        limparCampos();
+        atualizarTabela();
     }
 
-    const diasUteis = diasUteisRestantesHoje();
-    const hRest = Math.floor(restante / 60);
-    const mRest = restante % 60;
+    function pesquisarProfessor() {
+        const pesquisa = document.getElementById('pesquisaNome').value.trim();
+        const resultadoDiv = document.getElementById('resultadoPesquisa');
 
-    const mediaDia = Math.ceil(restante / diasUteis);
-    const hMedia = Math.floor(mediaDia / 60);
-    const mMedia = mediaDia % 60;
+        if(!pesquisa) {
+            alert('Digite o nome do professor para pesquisar!');
+            return;
+        }
 
-    const progresso = Math.min((feitosMin / totalMin) * 100, 100).toFixed(1);
+        const professorEncontrado = professores.find(p => p.nome.toLowerCase() === pesquisa.toLowerCase());
 
-    resultado.className = "result";
-    resultado.innerHTML = `
-        <div><strong>Dias úteis restantes:</strong>
-            <span class="highlight">${diasUteis}</span>
-        </div>
-        <div><strong>Faltam:</strong>
-            <span class="highlight">${hRest}h ${mRest}min</span>
-        </div>
-        <div><strong>Média diária necessária:</strong>
-            <span class="highlight">${hMedia}h ${mMedia}min</span>
-        </div>
+        if(professorEncontrado) {
+            resultadoDiv.innerHTML = `
+                <strong>Nome:</strong> ${professorEncontrado.nome}<br>
+                <strong>Disciplina:</strong> ${professorEncontrado.disciplina}<br>
+                <strong>Valor da Aula:</strong> R$ ${professorEncontrado.valorAula.toFixed(2)}<br>
+                <strong>Carga Horária:</strong> ${professorEncontrado.cargaHoraria} horas<br>
+                <strong>Valor Total:</strong> R$ ${professorEncontrado.valorTotal.toFixed(2)}
+            `;
+        } else {
+            resultadoDiv.innerHTML = 'Professor ainda não cadastrado.';
+        }
+    }
 
-        <div class="progress-container">
-            <div class="progress-bar">
-                <div class="progress-fill" style="width:${progresso}%"></div>
-            </div>
-            <div class="progress-text">${progresso}% concluído</div>
-        </div>
-    `;
-}
+    function atualizarTabela() {
+        const tbody = document.querySelector('#tabelaProfessores tbody');
+        tbody.innerHTML = '';
+        professores.forEach((prof, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${prof.nome}</td>
+                <td>${prof.disciplina}</td>
+                <td>R$ ${prof.valorAula.toFixed(2)}</td>
+                <td>${prof.cargaHoraria}</td>
+                <td>R$ ${prof.valorTotal.toFixed(2)}</td>
+                <td>
+                    <button class="action-btn edit-btn" onclick="editarProfessor(${index})">Editar</button>
+                    <button class="action-btn delete-btn" onclick="excluirProfessor(${index})">Excluir</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
 
-function limpar() {
-    document.getElementById("horasFeitas").value = "";
-    document.getElementById("minutosFeitos").value = "";
-    document.getElementById("resultado").innerHTML = "";
-    document.getElementById("resultado").className = "result";
-}
+    function editarProfessor(index) {
+        const prof = professores[index];
+        document.getElementById('nomeProfessor').value = prof.nome;
+        document.getElementById('disciplina').value = prof.disciplina;
+        document.getElementById('valorAula').value = prof.valorAula;
+        document.getElementById('cargaHoraria').value = prof.cargaHoraria;
+        editIndex = index;
+    }
+
+    function excluirProfessor(index) {
+        if(confirm('Tem certeza que deseja excluir este professor?')) {
+            professores.splice(index, 1);
+            atualizarTabela();
+        }
+    }
+
+    function limparCampos() {
+        document.getElementById('nomeProfessor').value = '';
+        document.getElementById('disciplina').value = '';
+        document.getElementById('valorAula').value = '';
+        document.getElementById('cargaHoraria').value = '';
+        document.getElementById('pesquisaNome').value = '';
+        document.getElementById('resultadoPesquisa').innerHTML = '';
+    }
 </script>
-
 </body>
 </html>
+
 
