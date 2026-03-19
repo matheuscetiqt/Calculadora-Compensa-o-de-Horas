@@ -2,96 +2,338 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Compensação de Horas</title>
+<title>Calculadora de Compensação – SENAI CETIQT</title>
+
 <style>
-    body {
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(180deg,#dbeafe,#bfdbfe,#e0f2fe);
-        margin: 0;
-        padding: 0;
+:root {
+    --primary: #1e40af;
+    --primary-dark: #1e3a8a;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --success: #22c55e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 🔹 CARD */
+.card {
+    background: var(--card);
+    width: 390px;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 20px 35px rgba(0,0,0,0.12);
+    position: relative;
+}
+
+/* 🔹 BADGE */
+.badge {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: #e0e7ff;
+    color: var(--primary-dark);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+/* 🔹 HEADER */
+.header {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.header .brand {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 1px;
+}
+
+.header h1 {
+    font-size: 18px;
+    margin: 6px 0 0;
+    color: var(--text);
+}
+
+.header p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+/* 🔹 FORM */
+.field {
+    margin-bottom: 14px;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+input {
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(30,64,175,0.15);
+}
+
+input:disabled {
+    background: #f8fafc;
+    color: var(--muted);
+}
+
+/* 🔹 BUTTONS */
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.btn-secondary:hover {
+    background: #d1d5db;
+}
+
+/* 🔹 RESULTADO + FADE-IN */
+.result {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
     }
-    header {
-        background-color: #1e3a8a;
-        color: white;
-        padding: 20px;
-        text-align: center;
-        font-size: 1.5em;
-        font-weight: bold;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-    main {
-        padding: 20px;
-        max-width: 600px;
-        margin: auto;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    label {
-        display: block;
-        margin-top: 10px;
-        font-weight: bold;
-    }
-    input {
-        width: 100%;
-        padding: 8px;
-        margin-top: 5px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-    }
-    button {
-        width: 100%;
-        padding: 10px;
-        margin-top: 15px;
-        border-radius: 5px;
-        border: none;
-        background-color: #1e3a8a;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    button:hover {
-        background-color: #374eb2;
-    }
-    .resultado {
-        margin-top: 20px;
-        padding: 15px;
-        background-color: #f3f4f6;
-        border-radius: 8px;
-        font-weight: bold;
-        text-align: center;
-    }
+}
+
+.highlight {
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+.success {
+    background: #ecfdf5;
+    border-color: #34d399;
+    color: #065f46;
+}
+
+/* 🔹 PROGRESSO */
+.progress-container {
+    margin-top: 14px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--success), #16a34a);
+    transition: width 0.6s ease;
+}
+
+.progress-text {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+}
+
+/* 🔹 FOOTER */
+.footer {
+    margin-top: 18px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+}
 </style>
 </head>
 <body>
-<header>Calculadora de Compensação de Horas</header>
-<main>
-    <label>Horas Trabalhadas:</label>
-    <input type="number" id="horasTrabalhadas" min="0" step="0.5">
 
-    <label>Horas Compensadas:</label>
-    <input type="number" id="horasCompensadas" min="0" step="0.5">
+<div class="card">
+    <div class="badge">Uso interno • SENAI CETIQT</div>
 
-    <label>Saldo Inicial de Horas:</label>
-    <input type="number" id="saldoInicial" value="0" step="0.5">
+    <div class="header">
+        <div class="brand">SENAI – CETIQT</div>
+        <h1>Compensação de Horas</h1>
+        <p>Base anual oficial</p>
+    </div>
 
-    <button onclick="calcularSaldo()">Calcular Saldo</button>
+    <div class="field">
+        <label>Total a compensar</label>
+        <input type="text" value="120 horas" disabled>
+    </div>
 
-    <div class="resultado" id="resultadoSaldo"></div>
-</main>
+    <div class="field">
+        <label>Horas já feitas</label>
+        <input type="number" id="horasFeitas" placeholder="Ex: 10">
+    </div>
+
+    <div class="field">
+        <label>Minutos já feitos</label>
+        <input type="number" id="minutosFeitos" placeholder="Ex: 30">
+    </div>
+
+    <div class="actions">
+        <button class="btn-primary" onclick="calcular()">Calcular</button>
+        <button class="btn-secondary" onclick="limpar()">Limpar</button>
+    </div>
+
+    <div id="resultado"></div>
+
+    <div class="footer">
+        Em caso de dúvidas:<br>
+        <strong>MDRConceicao@cetiqt.senai.br</strong>
+    </div>
+</div>
 
 <script>
-    function calcularSaldo() {
-        const trabalhadas = parseFloat(document.getElementById('horasTrabalhadas').value) || 0;
-        const compensadas = parseFloat(document.getElementById('horasCompensadas').value) || 0;
-        const saldoInicial = parseFloat(document.getElementById('saldoInicial').value) || 0;
+const TOTAL_HORAS = 120;
+const TOTAL_DIAS_UTEIS = 233;
 
-        const saldoFinal = saldoInicial + trabalhadas - compensadas;
+const feriados = [
+  "2026-01-01","2026-01-02","2026-01-19","2026-01-20",
+  "2026-02-13","2026-02-16","2026-02-17","2026-02-18",
+  "2026-04-03","2026-04-20","2026-04-21","2026-04-23",
+  "2026-05-01",
+  "2026-06-04","2026-06-05",
+  "2026-09-07",
+  "2026-10-12",
+  "2026-11-02","2026-11-20",
+  "2026-12-21","2026-12-22","2026-12-23","2026-12-24",
+  "2026-12-25","2026-12-28","2026-12-29","2026-12-30","2026-12-31"
+];
 
-        document.getElementById('resultadoSaldo').innerText = `Saldo de Horas: ${saldoFinal.toFixed(2)} horas`;
+function isDiaUtil(data) {
+    const dia = data.getDay();
+    const iso = data.toISOString().slice(0,10);
+    return dia !== 0 && dia !== 6 && !feriados.includes(iso);
+}
+
+function diasUteisRestantesHoje() {
+    let data = new Date("2026-01-01");
+    const hoje = new Date();
+    let usados = 0;
+
+    while (data < hoje) {
+        if (isDiaUtil(data)) usados++;
+        data.setDate(data.getDate() + 1);
     }
+    return TOTAL_DIAS_UTEIS - usados;
+}
+
+function calcular() {
+    const horas = Number(document.getElementById("horasFeitas").value);
+    const minutos = Number(document.getElementById("minutosFeitos").value);
+
+    const totalMin = TOTAL_HORAS * 60;
+    const feitosMin = (horas * 60) + minutos;
+    const restante = totalMin - feitosMin;
+
+    const resultado = document.getElementById("resultado");
+
+    if (restante <= 0) {
+        resultado.innerHTML = `<div class="result success">🎉 <strong>Compensação concluída!</strong></div>`;
+        return;
+    }
+
+    const diasUteis = diasUteisRestantesHoje();
+    const hRest = Math.floor(restante / 60);
+    const mRest = restante % 60;
+
+    const mediaDia = Math.ceil(restante / diasUteis);
+    const hMedia = Math.floor(mediaDia / 60);
+    const mMedia = mediaDia % 60;
+
+    const progresso = Math.min((feitosMin / totalMin) * 100, 100).toFixed(1);
+
+    resultado.innerHTML = `
+        <div class="result">
+            <div><strong>Dias úteis restantes:</strong> <span class="highlight">${diasUteis}</span></div>
+            <div><strong>Faltam:</strong> <span class="highlight">${hRest}h ${mRest}min</span></div>
+            <div><strong>Média diária necessária:</strong> <span class="highlight">${hMedia}h ${mMedia}min</span></div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:${progresso}%"></div>
+                </div>
+                <div class="progress-text">${progresso}% concluído</div>
+            </div>
+        </div>
+    `;
+}
+
+function limpar() {
+    document.getElementById("horasFeitas").value = "";
+    document.getElementById("minutosFeitos").value = "";
+    document.getElementById("resultado").innerHTML = "";
+}
 </script>
+
 </body>
 </html>
