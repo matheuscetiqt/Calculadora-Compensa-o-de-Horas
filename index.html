@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -28,7 +29,6 @@ body {
     justify-content: center;
 }
 
-/* 🔹 CARD */
 .card {
     background: var(--card);
     width: 390px;
@@ -38,7 +38,6 @@ body {
     position: relative;
 }
 
-/* 🔹 BADGE */
 .badge {
     position: absolute;
     top: 14px;
@@ -51,7 +50,6 @@ body {
     font-weight: 600;
 }
 
-/* 🔹 HEADER */
 .header {
     text-align: center;
     margin-bottom: 22px;
@@ -76,7 +74,6 @@ body {
     margin-top: 4px;
 }
 
-/* 🔹 FORM */
 .field {
     margin-bottom: 14px;
 }
@@ -107,7 +104,6 @@ input:disabled {
     color: var(--muted);
 }
 
-/* 🔹 BUTTONS */
 .actions {
     display: flex;
     gap: 10px;
@@ -142,7 +138,6 @@ button {
     background: #d1d5db;
 }
 
-/* 🔹 RESULTADO + FADE-IN */
 .result {
     margin-top: 18px;
     padding: 16px;
@@ -177,7 +172,6 @@ button {
     color: #065f46;
 }
 
-/* 🔹 PROGRESSO */
 .progress-container {
     margin-top: 14px;
 }
@@ -204,7 +198,6 @@ button {
     text-align: right;
 }
 
-/* 🔹 FOOTER */
 .footer {
     margin-top: 18px;
     font-size: 12px;
@@ -213,6 +206,7 @@ button {
 }
 </style>
 </head>
+
 <body>
 
 <div class="card">
@@ -226,17 +220,17 @@ button {
 
     <div class="field">
         <label>Total a compensar</label>
-        <input type="text" value="120 horas" disabled>
+        <input type="text" value="64 horas" disabled>
     </div>
 
     <div class="field">
         <label>Horas já feitas</label>
-        <input type="number" id="horasFeitas" placeholder="Ex: 10">
+        <input type="number" id="horasFeitas" placeholder="Ex: 10" min="0">
     </div>
 
     <div class="field">
         <label>Minutos já feitos</label>
-        <input type="number" id="minutosFeitos" placeholder="Ex: 30">
+        <input type="number" id="minutosFeitos" placeholder="Ex: 30" min="0">
     </div>
 
     <div class="actions">
@@ -253,7 +247,7 @@ button {
 </div>
 
 <script>
-const TOTAL_HORAS = 120;
+const TOTAL_HORAS = 64;
 const TOTAL_DIAS_UTEIS = 233;
 
 const feriados = [
@@ -296,6 +290,11 @@ function calcular() {
     const restante = totalMin - feitosMin;
 
     const resultado = document.getElementById("resultado");
+
+    if (feitosMin < 0 || feitosMin > totalMin || minutos < 0) {
+        resultado.innerHTML = `<div class="result">⚠️ Informe um total válido de horas e minutos.</div>`;
+        return;
+    }
 
     if (restante <= 0) {
         resultado.innerHTML = `<div class="result success">🎉 <strong>Compensação concluída!</strong></div>`;
