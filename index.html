@@ -3,6 +3,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora de Compensação – SENAI CETIQT</title>
 
 <style>
@@ -27,11 +28,13 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px;
 }
 
 .card {
     background: var(--card);
     width: 390px;
+    max-width: 100%;
     border-radius: 20px;
     padding: 28px;
     box-shadow: 0 20px 35px rgba(0,0,0,0.12);
@@ -87,21 +90,16 @@ label {
 input {
     width: 100%;
     margin-top: 6px;
-    padding: 10px 12px;
+    padding: 12px;
     border-radius: 10px;
     border: 1px solid var(--border);
-    font-size: 14px;
+    font-size: 15px;
 }
 
 input:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 2px rgba(30,64,175,0.15);
-}
-
-input:disabled {
-    background: #f8fafc;
-    color: var(--muted);
 }
 
 .actions {
@@ -145,7 +143,7 @@ button {
     background: #f8fafc;
     border: 1px solid var(--border);
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.8;
     opacity: 0;
     animation: fadeIn 0.5s ease forwards;
 }
@@ -172,44 +170,20 @@ button {
     color: #065f46;
 }
 
-.progress-container {
-    margin-top: 14px;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 12px;
-    background: #e5e7eb;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--success), #16a34a);
-    transition: width 0.6s ease;
-}
-
-.progress-text {
-    margin-top: 6px;
-    font-size: 12px;
-    color: var(--muted);
-    text-align: right;
-}
-
 .footer {
     margin-top: 18px;
     font-size: 12px;
     color: var(--muted);
     text-align: center;
 }
+
 </style>
 </head>
 
 <body>
 
 <div class="card">
+
     <div class="badge">Uso interno • SENAI CETIQT</div>
 
     <div class="header">
@@ -219,23 +193,24 @@ button {
     </div>
 
     <div class="field">
-        <label>Total a compensar</label>
-        <input type="text" value="64 horas" disabled>
-    </div>
-
-    <div class="field">
-        <label>Horas já feitas</label>
-        <input type="number" id="horasFeitas" placeholder="Ex: 10" min="0">
-    </div>
-
-    <div class="field">
-        <label>Minutos já feitos</label>
-        <input type="number" id="minutosFeitos" placeholder="Ex: 30" min="0">
+        <label for="totalHoras">Total de horas a compensar</label>
+        <input
+            type="number"
+            id="totalHoras"
+            placeholder="Ex: 64"
+            min="0"
+            step="0.01"
+        >
     </div>
 
     <div class="actions">
-        <button class="btn-primary" onclick="calcular()">Calcular</button>
-        <button class="btn-secondary" onclick="limpar()">Limpar</button>
+        <button class="btn-primary" onclick="calcular()">
+            Calcular
+        </button>
+
+        <button class="btn-secondary" onclick="limpar()">
+            Limpar
+        </button>
     </div>
 
     <div id="resultado"></div>
@@ -244,10 +219,11 @@ button {
         Em caso de dúvidas:<br>
         <strong>MDRConceicao@cetiqt.senai.br</strong>
     </div>
+
 </div>
 
 <script>
-const TOTAL_HORAS = 64;
+
 const TOTAL_DIAS_UTEIS = 233;
 
 const feriados = [
@@ -265,73 +241,109 @@ const feriados = [
 
 function isDiaUtil(data) {
     const dia = data.getDay();
-    const iso = data.toISOString().slice(0,10);
+
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
+    const diaMes = String(data.getDate()).padStart(2, "0");
+
+    const iso = `${ano}-${mes}-${diaMes}`;
+
     return dia !== 0 && dia !== 6 && !feriados.includes(iso);
 }
 
 function diasUteisRestantesHoje() {
-    let data = new Date("2026-01-01");
+
+    let data = new Date(2026, 0, 1);
     const hoje = new Date();
+
+    hoje.setHours(0, 0, 0, 0);
+
     let usados = 0;
 
     while (data < hoje) {
-        if (isDiaUtil(data)) usados++;
+
+        if (isDiaUtil(data)) {
+            usados++;
+        }
+
         data.setDate(data.getDate() + 1);
     }
-    return TOTAL_DIAS_UTEIS - usados;
+
+    return Math.max(0, TOTAL_DIAS_UTEIS - usados);
 }
 
 function calcular() {
-    const horas = Number(document.getElementById("horasFeitas").value);
-    const minutos = Number(document.getElementById("minutosFeitos").value);
 
-    const totalMin = TOTAL_HORAS * 60;
-    const feitosMin = (horas * 60) + minutos;
-    const restante = totalMin - feitosMin;
+    const totalHoras = Number(
+        document.getElementById("totalHoras").value
+    );
 
     const resultado = document.getElementById("resultado");
 
-    if (feitosMin < 0 || feitosMin > totalMin || minutos < 0) {
-        resultado.innerHTML = `<div class="result">⚠️ Informe um total válido de horas e minutos.</div>`;
-        return;
-    }
-
-    if (restante <= 0) {
-        resultado.innerHTML = `<div class="result success">🎉 <strong>Compensação concluída!</strong></div>`;
+    if (
+        document.getElementById("totalHoras").value === "" ||
+        !Number.isFinite(totalHoras) ||
+        totalHoras <= 0
+    ) {
+        resultado.innerHTML = `
+            <div class="result">
+                ⚠️ Informe uma quantidade válida de horas a compensar.
+            </div>
+        `;
         return;
     }
 
     const diasUteis = diasUteisRestantesHoje();
-    const hRest = Math.floor(restante / 60);
-    const mRest = restante % 60;
 
-    const mediaDia = Math.ceil(restante / diasUteis);
-    const hMedia = Math.floor(mediaDia / 60);
-    const mMedia = mediaDia % 60;
+    const totalMinutos = Math.round(totalHoras * 60);
 
-    const progresso = Math.min((feitosMin / totalMin) * 100, 100).toFixed(1);
+    const horas = Math.floor(totalMinutos / 60);
+    const minutos = totalMinutos % 60;
+
+    if (diasUteis === 0) {
+        resultado.innerHTML = `
+            <div class="result">
+                ⚠️ Não há mais dias úteis disponíveis na base anual de 2026.
+            </div>
+        `;
+        return;
+    }
+
+    const mediaDiaria = Math.ceil(totalMinutos / diasUteis);
+
+    const hMedia = Math.floor(mediaDiaria / 60);
+    const mMedia = mediaDiaria % 60;
 
     resultado.innerHTML = `
         <div class="result">
-            <div><strong>Dias úteis restantes:</strong> <span class="highlight">${diasUteis}</span></div>
-            <div><strong>Faltam:</strong> <span class="highlight">${hRest}h ${mRest}min</span></div>
-            <div><strong>Média diária necessária:</strong> <span class="highlight">${hMedia}h ${mMedia}min</span></div>
 
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width:${progresso}%"></div>
-                </div>
-                <div class="progress-text">${progresso}% concluído</div>
+            <div>
+                <strong>Dias úteis restantes:</strong>
+                <span class="highlight">${diasUteis}</span>
             </div>
+
+            <div>
+                <strong>Total a compensar:</strong>
+                <span class="highlight">${horas}h ${minutos}min</span>
+            </div>
+
+            <div>
+                <strong>Média diária necessária:</strong>
+                <span class="highlight">${hMedia}h ${mMedia}min</span>
+            </div>
+
         </div>
     `;
 }
 
 function limpar() {
-    document.getElementById("horasFeitas").value = "";
-    document.getElementById("minutosFeitos").value = "";
+
+    document.getElementById("totalHoras").value = "";
+
     document.getElementById("resultado").innerHTML = "";
+
 }
+
 </script>
 
 </body>
